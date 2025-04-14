@@ -1,18 +1,118 @@
 [
   {
-    "name": "test",
+    "name": "Astarya",
     "pos": [
-      623,
-      1025.808480741688
+      400,
+      800
     ],
-    "url": "test"
+    "url": "https://notion.so/astarya",
+    "type": "ville"
   },
   {
-    "name": "test 3",
+    "name": "Forêt d’Ombremousse",
     "pos": [
-      532,
-      678.9215031611341
+      700,
+      1200
     ],
-    "url": "test 3"
+    "url": "https://notion.so/foret-ombre",
+    "type": "foret"
+  },
+  {
+    "name": "Ruines de Nareth",
+    "pos": [
+      550,
+      950
+    ],
+    "url": "https://notion.so/nareth",
+    "type": "ruine"
+  },
+  {
+    "name": "Donjon de Brume",
+    "pos": [
+      600,
+      1050
+    ],
+    "url": "https://notion.so/brume",
+    "type": "donjon"
+  },
+  {
+    "name": "Domaine des Jumeaux",
+    "pos": [
+      726,
+      415.8651548079232
+    ],
+    "url": "empty",
+    "type": "ville",
+    "notes": "Le domaine d'origine de Taissa et de Sylvain"
+  },
+  {
+    "name": "Astaria",
+    "pos": [
+      551.75,
+      622.2211743973459
+    ],
+    "url": "empty",
+    "type": "ville",
+    "notes": "La ville de départ des aventuriers du ?.\n\nVille d'origine de Phalanges"
+  },
+  {
+    "name": "Syll Tirion",
+    "pos": [
+      499,
+      406.0140056600466
+    ],
+    "url": "Empty",
+    "type": "ruine",
+    "notes": "Les Ruines de l'ancienne cité de Syll Tirion"
+  },
+  {
+    "name": "Naübamia",
+    "pos": [
+      516.25,
+      494.61645003311105
+    ],
+    "url": "empty",
+    "type": "ville",
+    "notes": ""
+  },
+  {
+    "name": "Penerya",
+    "pos": [
+      529.5,
+      547.4742279569491
+    ],
+    "url": "Empty",
+    "type": "ville",
+    "notes": "La grande cité majestueuse de Penerya, centre marchand débordant de richesses"
+  },
+  {
+    "name": "Valdara",
+    "pos": [
+      529.875,
+      583.7253679525343
+    ],
+    "url": "Empty",
+    "type": "ville",
+    "notes": "Lac de Veldara"
+  },
+  {
+    "name": "Prairie d'Émeraude",
+    "pos": [
+      476,
+      640.772978022035
+    ],
+    "url": "Empty",
+    "type": "ville",
+    "notes": "Mystérieusement calme et infinie"
+  },
+  {
+    "name": "La Haute Côte",
+    "pos": [
+      588,
+      696.7547380926719
+    ],
+    "url": "Empty",
+    "type": "ville",
+    "notes": ""
   }
 ]
