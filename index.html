@@ -51,13 +51,26 @@
     const markers = [];
     let savedPoints = [];
 
+    function getIconForType(type) {
+      const icons = {
+        ville: L.icon({ iconUrl: 'icons/ville.png', iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
+        foret: L.icon({ iconUrl: 'icons/foret.png', iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
+        ruine: L.icon({ iconUrl: 'icons/ruine.png', iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
+        donjon: L.icon({ iconUrl: 'icons/donjon.png', iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] }),
+        default: L.icon({ iconUrl: 'icons/default.png', iconSize: [32, 32], iconAnchor: [16, 32], popupAnchor: [0, -32] })
+      };
+      return icons[type] || icons.default;
+    }
+
     // Charger les points depuis points.json
     fetch('points.json')
       .then(response => response.json())
       .then(data => {
         savedPoints = data;
         data.forEach(point => {
-          const marker = L.marker(point.pos).addTo(map);
+          const icon = getIconForType(point.type);
+          const marker = L.marker(point.pos, { icon }).addTo(map);
+
           const markerPopup = document.createElement('div');
           markerPopup.innerHTML = `<a href="${point.url}" target="_blank">${point.name}</a>`;
 
@@ -78,7 +91,6 @@
     // Ajouter un point avec un clic
     map.on('click', function(e) {
       const coords = e.latlng;
-      console.log('Coordonnées:', coords);
 
       const popupContent = document.createElement('div');
       popupContent.className = 'popup-form';
@@ -89,11 +101,15 @@
       const inputURL = document.createElement('input');
       inputURL.placeholder = 'Lien vers la page Notion';
 
+      const inputType = document.createElement('input');
+      inputType.placeholder = 'Type (ville, ruine, foret, etc.)';
+
       const buttonAdd = document.createElement('button');
       buttonAdd.textContent = 'Ajouter';
 
       popupContent.appendChild(inputName);
       popupContent.appendChild(inputURL);
+      popupContent.appendChild(inputType);
       popupContent.appendChild(buttonAdd);
 
       const popup = L.popup()
@@ -104,9 +120,11 @@
       buttonAdd.addEventListener('click', () => {
         const name = inputName.value.trim();
         const url = inputURL.value.trim();
+        const type = inputType.value.trim().toLowerCase();
 
         if (name && url) {
-          const marker = L.marker(coords).addTo(map);
+          const icon = getIconForType(type);
+          const marker = L.marker(coords, { icon }).addTo(map);
           markers.push(marker);
 
           const markerPopup = document.createElement('div');
@@ -124,28 +142,29 @@
           markerPopup.appendChild(deleteBtn);
 
           marker.bindPopup(markerPopup);
-
           map.closePopup();
 
           const newPoint = {
             name: name,
             pos: [coords.lat, coords.lng],
-            url: url
+            url: url,
+            type: type
           };
+
           savedPoints.push(newPoint);
+
+          console.log("À ajouter dans points.json :", JSON.stringify(savedPoints, null, 2));
         }
       });
     });
 
-    // Télécharger le JSON localement
+    // Téléchargement du fichier points.json
     document.getElementById('download-btn').addEventListener('click', () => {
-      const blob = new Blob([JSON.stringify(savedPoints, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'points.json';
-      a.click();
-      URL.revokeObjectURL(url);
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(savedPoints, null, 2));
+      const dlAnchor = document.createElement('a');
+      dlAnchor.setAttribute("href", dataStr);
+      dlAnchor.setAttribute("download", "points.json");
+      dlAnchor.click();
     });
   </script>
 </body>
