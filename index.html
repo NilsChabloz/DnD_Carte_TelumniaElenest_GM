@@ -208,8 +208,16 @@ container.appendChild(cancelBtn);
       deleteBtn.textContent = '🗑️ Supprimer';
       deleteBtn.addEventListener('click', () => {
         map.removeLayer(marker);
-      });
-      container.appendChild(deleteBtn);
+
+        // Supprimer le point du tableau savedPoints
+        savedPoints = savedPoints.filter(p => {
+          return !(p.name === point.name && p.pos[0] === point.pos[0] && p.pos[1] === point.pos[1]);
+        });
+
+  console.log("Supprimé. Nouveau JSON :", JSON.stringify(savedPoints, null, 2));
+});
+container.appendChild(deleteBtn);
+
 
       return container;
     }
