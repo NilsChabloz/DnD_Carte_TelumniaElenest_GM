@@ -7,6 +7,18 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
     #map { height: 100vh; width: 100vw; }
+    #download-btn, #filter-type {
+      position: absolute;
+      top: 10px;
+      z-index: 1000;
+      padding: 8px 12px;
+      background-color: white;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #download-btn { left: 10px; }
+    #filter-type { left: 160px; }
     .popup-form {
       display: flex;
       flex-direction: column;
@@ -47,21 +59,17 @@
       width: 100%;
       margin-top: 4px;
     }
-    #download-btn {
-      position: absolute;
-      top: 10px;
-      left: 10px;
-      z-index: 1000;
-      padding: 8px 12px;
-      background-color: white;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      cursor: pointer;
-    }
   </style>
 </head>
 <body>
   <button id="download-btn">Télécharger points.json</button>
+  <select id="filter-type">
+    <option value="all">Tous les types</option>
+    <option value="ville">Ville</option>
+    <option value="foret">Forêt</option>
+    <option value="ruine">Ruine</option>
+    <option value="donjon">Donjon</option>
+  </select>
   <div id="map"></div>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
@@ -131,6 +139,7 @@
         marker.setTooltipContent(point.name);
         marker.closePopup();
         marker.bindPopup(createEditablePopup(point, marker)).openPopup();
+        marker.type = point.type;
       });
       container.appendChild(saveBtn);
 
@@ -144,18 +153,32 @@
       return container;
     }
 
+    function addMarker(point) {
+      const icon = getIconForType(point.type);
+      const marker = L.marker(point.pos, { icon, title: point.name }).addTo(map);
+      marker.bindTooltip(point.name);
+      marker.bindPopup(createEditablePopup(point, marker));
+      marker.type = point.type;
+      markers.push(marker);
+    }
+
     fetch('points.json')
       .then(response => response.json())
       .then(data => {
         savedPoints = data;
-        data.forEach(point => {
-          const icon = getIconForType(point.type);
-          const marker = L.marker(point.pos, { icon, title: point.name }).addTo(map);
-          marker.bindTooltip(point.name);
-          const popupContent = createEditablePopup(point, marker);
-          marker.bindPopup(popupContent);
-        });
+        data.forEach(addMarker);
       });
+
+    document.getElementById('filter-type').addEventListener('change', function () {
+      const selectedType = this.value;
+      markers.forEach(marker => {
+        if (selectedType === 'all' || marker.type === selectedType) {
+          marker.addTo(map);
+        } else {
+          map.removeLayer(marker);
+        }
+      });
+    });
 
     map.on('click', function(e) {
       const coords = e.latlng;
@@ -203,10 +226,6 @@
         const notes = inputNotes.value.trim();
 
         if (name && url) {
-          const icon = getIconForType(type);
-          const marker = L.marker(coords, { icon, title: name }).addTo(map);
-          markers.push(marker);
-
           const point = {
             name: name,
             pos: [coords.lat, coords.lng],
@@ -215,12 +234,9 @@
             notes: notes
           };
 
-          marker.bindTooltip(name);
-          const popupContent = createEditablePopup(point, marker);
-          marker.bindPopup(popupContent);
-
-          map.closePopup();
+          addMarker(point);
           savedPoints.push(point);
+          map.closePopup();
 
           console.log("À ajouter dans points.json :", JSON.stringify(savedPoints, null, 2));
         }
