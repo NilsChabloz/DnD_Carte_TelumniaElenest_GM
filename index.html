@@ -12,7 +12,8 @@
       flex-direction: column;
     }
     .popup-form input,
-    .popup-form select {
+    .popup-form select,
+    .popup-form textarea {
       margin-bottom: 4px;
     }
     .popup-form button {
@@ -72,7 +73,7 @@
           const marker = L.marker(point.pos, { icon, title: point.name }).addTo(map);
 
           const markerPopup = document.createElement('div');
-          markerPopup.innerHTML = `<a href="${point.url}" target="_blank">${point.name}</a>`;
+          markerPopup.innerHTML = `<a href="${point.url}" target="_blank">${point.name}</a><br><small>${point.notes || ''}</small>`;
 
           const deleteBtn = document.createElement('button');
           deleteBtn.textContent = 'Supprimer';
@@ -109,12 +110,17 @@
         selectType.appendChild(option);
       });
 
+      const inputNotes = document.createElement('textarea');
+      inputNotes.placeholder = 'Notes (optionnel)';
+      inputNotes.rows = 3;
+
       const buttonAdd = document.createElement('button');
       buttonAdd.textContent = 'Ajouter';
 
       popupContent.appendChild(inputName);
       popupContent.appendChild(inputURL);
       popupContent.appendChild(selectType);
+      popupContent.appendChild(inputNotes);
       popupContent.appendChild(buttonAdd);
 
       const popup = L.popup()
@@ -126,6 +132,7 @@
         const name = inputName.value.trim();
         const url = inputURL.value.trim();
         const type = selectType.value;
+        const notes = inputNotes.value.trim();
 
         if (name && url) {
           const icon = getIconForType(type);
@@ -133,7 +140,7 @@
           markers.push(marker);
 
           const markerPopup = document.createElement('div');
-          markerPopup.innerHTML = `<a href="${url}" target="_blank">${name}</a>`;
+          markerPopup.innerHTML = `<a href="${url}" target="_blank">${name}</a><br><small>${notes}</small>`;
 
           const deleteBtn = document.createElement('button');
           deleteBtn.textContent = 'Supprimer';
@@ -153,7 +160,8 @@
             name: name,
             pos: [coords.lat, coords.lng],
             url: url,
-            type: type
+            type: type,
+            notes: notes
           };
 
           savedPoints.push(newPoint);
