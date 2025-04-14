@@ -1,38 +1,18 @@
 [
   {
-    "name": "Astarya",
+    "name": "test",
     "pos": [
-      400,
-      800
+      623,
+      1025.808480741688
     ],
-    "url": "https://notion.so/astarya",
-    "type": "ville"
+    "url": "test"
   },
   {
-    "name": "For\u00eat d\u2019Ombremousse",
+    "name": "test 3",
     "pos": [
-      700,
-      1200
+      532,
+      678.9215031611341
     ],
-    "url": "https://notion.so/foret-ombre",
-    "type": "foret"
-  },
-  {
-    "name": "Ruines de Nareth",
-    "pos": [
-      550,
-      950
-    ],
-    "url": "https://notion.so/nareth",
-    "type": "ruine"
-  },
-  {
-    "name": "Donjon de Brume",
-    "pos": [
-      600,
-      1050
-    ],
-    "url": "https://notion.so/brume",
-    "type": "donjon"
+    "url": "test 3"
   }
 ]
