@@ -23,15 +23,20 @@
       margin: 0 0 4px 0;
       font-size: 16px;
     }
-    .marker-popup small {
+    .marker-popup small,
+    .marker-popup p.note-text {
       display: block;
       margin-bottom: 8px;
       white-space: pre-wrap;
+      font-style: italic;
+      color: #555;
+      font-size: 14px;
     }
-    .marker-popup p {
+    .marker-popup p.type-text {
       margin: 0;
       font-style: italic;
       color: #555;
+      font-size: 14px;
     }
     .marker-popup button {
       margin-top: 4px;
@@ -94,10 +99,12 @@
       container.appendChild(title);
 
       const typeDisplay = document.createElement('p');
+      typeDisplay.className = 'type-text';
       typeDisplay.textContent = `Type : ${point.type}`;
       container.appendChild(typeDisplay);
 
-      const notesDisplay = document.createElement('small');
+      const notesDisplay = document.createElement('p');
+      notesDisplay.className = 'note-text';
       notesDisplay.textContent = point.notes || '';
       container.appendChild(notesDisplay);
 
