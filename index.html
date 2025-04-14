@@ -120,7 +120,8 @@
 
       const editBtn = document.createElement('button');
       editBtn.textContent = '✏️ Modifier';
-      editBtn.addEventListener('click', () => {
+      editBtn.addEventListener('click', (event) => {
+        event.stopPropagation();
         marker.bindPopup(createEditablePopup(point, marker)).openPopup();
       });
       container.appendChild(editBtn);
