@@ -6,16 +6,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
-    body, html { margin: 0; padding: 0; }
     #map { height: 100vh; width: 100vw; }
+    .popup-form {
+      display: flex;
+      flex-direction: column;
+    }
+    .popup-form input {
+      margin-bottom: 4px;
+    }
+    .popup-form button {
+      margin-top: 4px;
+    }
   </style>
 </head>
 <body>
   <div id="map"></div>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
-    const imageUrl = 'Telumnia et Elenest.png'; // ton image
-    const imageWidth = 2048; // à ajuster selon ton image
+    const imageUrl = 'Telumnia et Elenest.png';
+    const imageWidth = 2048;
     const imageHeight = 1182;
 
     const map = L.map('map', {
@@ -27,15 +36,62 @@
     L.imageOverlay(imageUrl, bounds).addTo(map);
     map.fitBounds(bounds);
 
-    // Exemple de points
-    const points = [
-      { name: "Astarya", pos: [300, 500], url: "https://www.notion.so/astarya" },
-      { name: "Penerya", pos: [700, 1200], url: "https://www.notion.so/penerya" },
-    ];
+    const markers = [];
 
-    points.forEach(({ name, pos, url }) => {
-      L.marker(pos).addTo(map)
-        .bindPopup(`<a href="${url}" target="_blank">${name}</a>`);
+    map.on('click', function(e) {
+      const coords = e.latlng;
+      console.log('Coordonnées:', coords);
+
+      const popupContent = document.createElement('div');
+      popupContent.className = 'popup-form';
+
+      const inputName = document.createElement('input');
+      inputName.placeholder = 'Nom du lieu';
+
+      const inputURL = document.createElement('input');
+      inputURL.placeholder = 'Lien vers la page Notion';
+
+      const buttonAdd = document.createElement('button');
+      buttonAdd.textContent = 'Ajouter';
+
+      popupContent.appendChild(inputName);
+      popupContent.appendChild(inputURL);
+      popupContent.appendChild(buttonAdd);
+
+      const popup = L.popup()
+        .setLatLng(coords)
+        .setContent(popupContent)
+        .openOn(map);
+
+      buttonAdd.addEventListener('click', () => {
+        const name = inputName.value.trim();
+        const url = inputURL.value.trim();
+
+        if (name && url) {
+          const marker = L.marker(coords).addTo(map);
+          markers.push(marker);
+
+          const markerPopup = document.createElement('div');
+          markerPopup.innerHTML = `<a href="${url}" target="_blank">${name}</a>`;
+
+          const deleteBtn = document.createElement('button');
+          deleteBtn.textContent = 'Supprimer';
+          deleteBtn.style.marginTop = '5px';
+
+          deleteBtn.addEventListener('click', () => {
+            map.removeLayer(marker);
+          });
+
+          markerPopup.appendChild(document.createElement('br'));
+          markerPopup.appendChild(deleteBtn);
+
+          marker.bindPopup(markerPopup);
+
+          map.closePopup();
+
+          console.log(`{ name: "${name}", pos: [${coords.lat.toFixed(2)}, ${coords.lng.toFixed(2)}], url: "${url}" },`);
+        }
+      });
     });
   </script>
 </body>
