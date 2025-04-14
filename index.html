@@ -17,9 +17,21 @@
     .popup-form button {
       margin-top: 4px;
     }
+    #download-btn {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      z-index: 1000;
+      padding: 8px 12px;
+      background-color: white;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
+  <button id="download-btn">Télécharger points.json</button>
   <div id="map"></div>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
@@ -37,7 +49,33 @@
     map.fitBounds(bounds);
 
     const markers = [];
+    let savedPoints = [];
 
+    // Charger les points depuis points.json
+    fetch('points.json')
+      .then(response => response.json())
+      .then(data => {
+        savedPoints = data;
+        data.forEach(point => {
+          const marker = L.marker(point.pos).addTo(map);
+          const markerPopup = document.createElement('div');
+          markerPopup.innerHTML = `<a href="${point.url}" target="_blank">${point.name}</a>`;
+
+          const deleteBtn = document.createElement('button');
+          deleteBtn.textContent = 'Supprimer';
+          deleteBtn.style.marginTop = '5px';
+
+          deleteBtn.addEventListener('click', () => {
+            map.removeLayer(marker);
+          });
+
+          markerPopup.appendChild(document.createElement('br'));
+          markerPopup.appendChild(deleteBtn);
+          marker.bindPopup(markerPopup);
+        });
+      });
+
+    // Ajouter un point avec un clic
     map.on('click', function(e) {
       const coords = e.latlng;
       console.log('Coordonnées:', coords);
@@ -89,9 +127,25 @@
 
           map.closePopup();
 
-          console.log(`{ name: "${name}", pos: [${coords.lat.toFixed(2)}, ${coords.lng.toFixed(2)}], url: "${url}" },`);
+          const newPoint = {
+            name: name,
+            pos: [coords.lat, coords.lng],
+            url: url
+          };
+          savedPoints.push(newPoint);
         }
       });
+    });
+
+    // Télécharger le JSON localement
+    document.getElementById('download-btn').addEventListener('click', () => {
+      const blob = new Blob([JSON.stringify(savedPoints, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'points.json';
+      a.click();
+      URL.revokeObjectURL(url);
     });
   </script>
 </body>
