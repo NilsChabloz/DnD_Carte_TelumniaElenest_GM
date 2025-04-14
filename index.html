@@ -89,6 +89,8 @@
   <select id="filter-type">
     <option value="all">Tous les types</option>
     <option value="ville">Ville</option>
+    <option value="lac">Lac</option>
+    <option value="montagnes">Montagnes</option>
     <option value="foret">Forêt</option>
     <option value="ruine">Ruine</option>
     <option value="donjon">Donjon</option>
@@ -116,6 +118,8 @@
     function getIconForType(type) {
       const icons = {
         ville: L.icon({ iconUrl: 'icons/cross.png', iconSize: [32, 32], iconAnchor: [16, 16], popupAnchor: [0, -32] }),
+        lac: L.icon({ iconUrl: 'icons/cross.png', iconSize: [32, 32], iconAnchor: [16, 16], popupAnchor: [0, -32] }),
+        montagnes: L.icon({ iconUrl: 'icons/cross.png', iconSize: [32, 32], iconAnchor: [16, 16], popupAnchor: [0, -32] }),
         foret: L.icon({ iconUrl: 'icons/cross.png', iconSize: [32, 32], iconAnchor: [16, 16], popupAnchor: [0, -32] }),
         ruine: L.icon({ iconUrl: 'icons/cross.png', iconSize: [32, 32], iconAnchor: [16, 16], popupAnchor: [0, -32] }),
         donjon: L.icon({ iconUrl: 'icons/cross.png', iconSize: [32, 32], iconAnchor: [16, 16], popupAnchor: [0, -32] }),
@@ -166,7 +170,7 @@
       container.appendChild(inputURL);
 
       const selectType = document.createElement('select');
-      const types = ['ville', 'foret', 'ruine', 'donjon'];
+      const types = ['ville', 'foret', 'ruine', 'donjon','lac','montagnes];
       types.forEach(t => {
         const option = document.createElement('option');
         option.value = t;
@@ -262,7 +266,7 @@ container.appendChild(deleteBtn);
       inputURL.placeholder = 'Lien vers la page Notion';
 
       const selectType = document.createElement('select');
-      const types = ['ville', 'foret', 'ruine', 'donjon'];
+      const types = ['ville', 'foret', 'ruine', 'donjon','lac','montagnes'];
       types.forEach(t => {
         const option = document.createElement('option');
         option.value = t;
