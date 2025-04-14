@@ -41,7 +41,9 @@
     .marker-popup button {
       margin-top: 4px;
     }
-    .marker-popup textarea {
+    .marker-popup textarea,
+    .marker-popup input,
+    .marker-popup select {
       width: 100%;
       margin-top: 4px;
     }
@@ -94,40 +96,43 @@
       const container = document.createElement('div');
       container.className = 'marker-popup';
 
-      const title = document.createElement('h3');
-      title.innerHTML = `<a href="${point.url}" target="_blank">${point.name}</a>`;
-      container.appendChild(title);
+      const inputName = document.createElement('input');
+      inputName.value = point.name;
+      container.appendChild(inputName);
 
-      const typeDisplay = document.createElement('p');
-      typeDisplay.className = 'type-text';
-      typeDisplay.textContent = `Type : ${point.type}`;
-      container.appendChild(typeDisplay);
+      const inputURL = document.createElement('input');
+      inputURL.value = point.url;
+      container.appendChild(inputURL);
 
-      const notesDisplay = document.createElement('p');
-      notesDisplay.className = 'note-text';
-      notesDisplay.textContent = point.notes || '';
-      container.appendChild(notesDisplay);
+      const selectType = document.createElement('select');
+      const types = ['ville', 'foret', 'ruine', 'donjon'];
+      types.forEach(t => {
+        const option = document.createElement('option');
+        option.value = t;
+        option.textContent = t.charAt(0).toUpperCase() + t.slice(1);
+        if (point.type === t) option.selected = true;
+        selectType.appendChild(option);
+      });
+      container.appendChild(selectType);
 
       const notesEdit = document.createElement('textarea');
-      notesEdit.style.display = 'none';
       notesEdit.value = point.notes || '';
       container.appendChild(notesEdit);
 
-      const toggleEdit = document.createElement('button');
-      toggleEdit.textContent = '✏️ Modifier les notes';
+      const saveBtn = document.createElement('button');
+      saveBtn.textContent = '💾 Enregistrer les modifications';
+      saveBtn.addEventListener('click', () => {
+        point.name = inputName.value.trim();
+        point.url = inputURL.value.trim();
+        point.type = selectType.value;
+        point.notes = notesEdit.value.trim();
 
-      toggleEdit.addEventListener('click', () => {
-        if (notesEdit.style.display === 'none') {
-          notesEdit.style.display = 'block';
-          toggleEdit.textContent = '💾 Enregistrer les notes';
-        } else {
-          notesEdit.style.display = 'none';
-          notesDisplay.textContent = notesEdit.value;
-          point.notes = notesEdit.value;
-          toggleEdit.textContent = '✏️ Modifier les notes';
-        }
+        marker.setIcon(getIconForType(point.type));
+        marker.setTooltipContent(point.name);
+        marker.closePopup();
+        marker.bindPopup(createEditablePopup(point, marker)).openPopup();
       });
-      container.appendChild(toggleEdit);
+      container.appendChild(saveBtn);
 
       const deleteBtn = document.createElement('button');
       deleteBtn.textContent = '🗑️ Supprimer';
@@ -146,6 +151,7 @@
         data.forEach(point => {
           const icon = getIconForType(point.type);
           const marker = L.marker(point.pos, { icon, title: point.name }).addTo(map);
+          marker.bindTooltip(point.name);
           const popupContent = createEditablePopup(point, marker);
           marker.bindPopup(popupContent);
         });
@@ -209,6 +215,7 @@
             notes: notes
           };
 
+          marker.bindTooltip(name);
           const popupContent = createEditablePopup(point, marker);
           marker.bindPopup(popupContent);
 
