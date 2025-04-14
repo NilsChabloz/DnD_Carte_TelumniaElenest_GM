@@ -1,41 +1,5 @@
 [
   {
-    "name": "Astarya",
-    "pos": [
-      400,
-      800
-    ],
-    "url": "https://notion.so/astarya",
-    "type": "ville"
-  },
-  {
-    "name": "Forêt d’Ombremousse",
-    "pos": [
-      700,
-      1200
-    ],
-    "url": "https://notion.so/foret-ombre",
-    "type": "foret"
-  },
-  {
-    "name": "Ruines de Nareth",
-    "pos": [
-      550,
-      950
-    ],
-    "url": "https://notion.so/nareth",
-    "type": "ruine"
-  },
-  {
-    "name": "Donjon de Brume",
-    "pos": [
-      600,
-      1050
-    ],
-    "url": "https://notion.so/brume",
-    "type": "donjon"
-  },
-  {
     "name": "Domaine des Jumeaux",
     "pos": [
       726,
