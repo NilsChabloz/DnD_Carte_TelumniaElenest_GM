@@ -157,19 +157,28 @@
       container.appendChild(notesEdit);
 
       const saveBtn = document.createElement('button');
-      saveBtn.textContent = '💾 Enregistrer';
-      saveBtn.addEventListener('click', () => {
-        point.name = inputName.value.trim();
-        point.url = inputURL.value.trim();
-        point.type = selectType.value;
-        point.notes = notesEdit.value.trim();
+saveBtn.textContent = '💾 Enregistrer';
+saveBtn.addEventListener('click', (event) => {
+  event.stopPropagation();
+  point.name = inputName.value.trim();
+  point.url = inputURL.value.trim();
+  point.type = selectType.value;
+  point.notes = notesEdit.value.trim();
 
-        marker.setIcon(getIconForType(point.type));
-        marker.setTooltipContent(point.name);
-        marker.bindPopup(createDisplayPopup(point, marker)).openPopup();
-        marker.type = point.type;
-      });
-      container.appendChild(saveBtn);
+  marker.setIcon(getIconForType(point.type));
+  marker.setTooltipContent(point.name);
+  marker.bindPopup(createDisplayPopup(point, marker)).openPopup();
+  marker.type = point.type;
+});
+container.appendChild(saveBtn);
+
+const cancelBtn = document.createElement('button');
+cancelBtn.textContent = '❌ Annuler';
+cancelBtn.addEventListener('click', (event) => {
+  event.stopPropagation();
+  marker.bindPopup(createDisplayPopup(point, marker)).openPopup();
+});
+container.appendChild(cancelBtn);
 
       const deleteBtn = document.createElement('button');
       deleteBtn.textContent = '🗑️ Supprimer';
