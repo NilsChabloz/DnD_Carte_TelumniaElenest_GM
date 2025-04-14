@@ -19,6 +19,22 @@
     .popup-form button {
       margin-top: 4px;
     }
+    .marker-popup h3 {
+      margin: 0 0 4px 0;
+      font-size: 16px;
+    }
+    .marker-popup small {
+      display: block;
+      margin-bottom: 8px;
+      white-space: pre-wrap;
+    }
+    .marker-popup button {
+      margin-top: 4px;
+    }
+    .marker-popup textarea {
+      width: 100%;
+      margin-top: 4px;
+    }
     #download-btn {
       position: absolute;
       top: 10px;
@@ -64,6 +80,49 @@
       return icons[type] || icons.default;
     }
 
+    function createEditablePopup(point, marker) {
+      const container = document.createElement('div');
+      container.className = 'marker-popup';
+
+      const title = document.createElement('h3');
+      title.innerHTML = `<a href="${point.url}" target="_blank">${point.name}</a>`;
+      container.appendChild(title);
+
+      const notesDisplay = document.createElement('small');
+      notesDisplay.textContent = point.notes || '';
+      container.appendChild(notesDisplay);
+
+      const notesEdit = document.createElement('textarea');
+      notesEdit.style.display = 'none';
+      notesEdit.value = point.notes || '';
+      container.appendChild(notesEdit);
+
+      const toggleEdit = document.createElement('button');
+      toggleEdit.textContent = '✏️ Modifier les notes';
+
+      toggleEdit.addEventListener('click', () => {
+        if (notesEdit.style.display === 'none') {
+          notesEdit.style.display = 'block';
+          toggleEdit.textContent = '💾 Enregistrer les notes';
+        } else {
+          notesEdit.style.display = 'none';
+          notesDisplay.textContent = notesEdit.value;
+          point.notes = notesEdit.value;
+          toggleEdit.textContent = '✏️ Modifier les notes';
+        }
+      });
+      container.appendChild(toggleEdit);
+
+      const deleteBtn = document.createElement('button');
+      deleteBtn.textContent = '🗑️ Supprimer';
+      deleteBtn.addEventListener('click', () => {
+        map.removeLayer(marker);
+      });
+      container.appendChild(deleteBtn);
+
+      return container;
+    }
+
     fetch('points.json')
       .then(response => response.json())
       .then(data => {
@@ -71,21 +130,8 @@
         data.forEach(point => {
           const icon = getIconForType(point.type);
           const marker = L.marker(point.pos, { icon, title: point.name }).addTo(map);
-
-          const markerPopup = document.createElement('div');
-          markerPopup.innerHTML = `<a href="${point.url}" target="_blank">${point.name}</a><br><small>${point.notes || ''}</small>`;
-
-          const deleteBtn = document.createElement('button');
-          deleteBtn.textContent = 'Supprimer';
-          deleteBtn.style.marginTop = '5px';
-
-          deleteBtn.addEventListener('click', () => {
-            map.removeLayer(marker);
-          });
-
-          markerPopup.appendChild(document.createElement('br'));
-          markerPopup.appendChild(deleteBtn);
-          marker.bindPopup(markerPopup);
+          const popupContent = createEditablePopup(point, marker);
+          marker.bindPopup(popupContent);
         });
       });
 
@@ -139,24 +185,7 @@
           const marker = L.marker(coords, { icon, title: name }).addTo(map);
           markers.push(marker);
 
-          const markerPopup = document.createElement('div');
-          markerPopup.innerHTML = `<a href="${url}" target="_blank">${name}</a><br><small>${notes}</small>`;
-
-          const deleteBtn = document.createElement('button');
-          deleteBtn.textContent = 'Supprimer';
-          deleteBtn.style.marginTop = '5px';
-
-          deleteBtn.addEventListener('click', () => {
-            map.removeLayer(marker);
-          });
-
-          markerPopup.appendChild(document.createElement('br'));
-          markerPopup.appendChild(deleteBtn);
-
-          marker.bindPopup(markerPopup);
-          map.closePopup();
-
-          const newPoint = {
+          const point = {
             name: name,
             pos: [coords.lat, coords.lng],
             url: url,
@@ -164,7 +193,11 @@
             notes: notes
           };
 
-          savedPoints.push(newPoint);
+          const popupContent = createEditablePopup(point, marker);
+          marker.bindPopup(popupContent);
+
+          map.closePopup();
+          savedPoints.push(point);
 
           console.log("À ajouter dans points.json :", JSON.stringify(savedPoints, null, 2));
         }
