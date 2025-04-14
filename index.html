@@ -100,6 +100,34 @@
       return icons[type] || icons.default;
     }
 
+    function createDisplayPopup(point, marker) {
+      const container = document.createElement('div');
+      container.className = 'marker-popup';
+
+      const title = document.createElement('h3');
+      title.innerHTML = `<a href="${point.url}" target="_blank">${point.name}</a>`;
+      container.appendChild(title);
+
+      const typeDisplay = document.createElement('p');
+      typeDisplay.className = 'type-text';
+      typeDisplay.textContent = `Type : ${point.type}`;
+      container.appendChild(typeDisplay);
+
+      const notesDisplay = document.createElement('p');
+      notesDisplay.className = 'note-text';
+      notesDisplay.textContent = point.notes || '';
+      container.appendChild(notesDisplay);
+
+      const editBtn = document.createElement('button');
+      editBtn.textContent = '✏️ Modifier';
+      editBtn.addEventListener('click', () => {
+        marker.bindPopup(createEditablePopup(point, marker)).openPopup();
+      });
+      container.appendChild(editBtn);
+
+      return container;
+    }
+
     function createEditablePopup(point, marker) {
       const container = document.createElement('div');
       container.className = 'marker-popup';
@@ -128,7 +156,7 @@
       container.appendChild(notesEdit);
 
       const saveBtn = document.createElement('button');
-      saveBtn.textContent = '💾 Enregistrer les modifications';
+      saveBtn.textContent = '💾 Enregistrer';
       saveBtn.addEventListener('click', () => {
         point.name = inputName.value.trim();
         point.url = inputURL.value.trim();
@@ -137,8 +165,7 @@
 
         marker.setIcon(getIconForType(point.type));
         marker.setTooltipContent(point.name);
-        marker.closePopup();
-        marker.bindPopup(createEditablePopup(point, marker)).openPopup();
+        marker.bindPopup(createDisplayPopup(point, marker)).openPopup();
         marker.type = point.type;
       });
       container.appendChild(saveBtn);
@@ -157,7 +184,7 @@
       const icon = getIconForType(point.type);
       const marker = L.marker(point.pos, { icon, title: point.name }).addTo(map);
       marker.bindTooltip(point.name);
-      marker.bindPopup(createEditablePopup(point, marker));
+      marker.bindPopup(createDisplayPopup(point, marker));
       marker.type = point.type;
       markers.push(marker);
     }
