@@ -7,16 +7,33 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
     #map { height: 100vh; width: 100vw; }
-    #download-btn, #filter-type {
-      position: absolute;
-      top: 10px;
-      z-index: 1000;
-      padding: 8px 12px;
-      background-color: white;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      cursor: pointer;
-    }
+    .control-panel {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 1000;
+  display: flex;
+  gap: 10px;
+}
+
+.control-panel button,
+.control-panel select {
+  padding: 8px 12px;
+  background-color: #f5f0e6;
+  border: 2px solid #7a5c3e;
+  border-radius: 6px;
+  font-family: 'Georgia', serif;
+  font-size: 14px;
+  color: #3b2d1f;
+  cursor: pointer;
+  box-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+  transition: background-color 0.2s ease;
+}
+
+.control-panel button:hover,
+.control-panel select:hover {
+  background-color: #e7dbc4;
+}
     #download-btn { left: 10px; }
     #filter-type { left: 160px; }
     .popup-form {
@@ -62,7 +79,8 @@
   </style>
 </head>
 <body>
-  <button id="download-btn">Télécharger points.json</button>
+  <div class="control-panel">
+  <button id="download-btn">📥 Télécharger points.json</button>
   <select id="filter-type">
     <option value="all">Tous les types</option>
     <option value="ville">Ville</option>
@@ -70,6 +88,7 @@
     <option value="ruine">Ruine</option>
     <option value="donjon">Donjon</option>
   </select>
+</div>
   <div id="map"></div>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
