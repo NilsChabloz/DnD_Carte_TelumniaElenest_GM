@@ -28,6 +28,11 @@
       margin-bottom: 8px;
       white-space: pre-wrap;
     }
+    .marker-popup p {
+      margin: 0;
+      font-style: italic;
+      color: #555;
+    }
     .marker-popup button {
       margin-top: 4px;
     }
@@ -87,6 +92,10 @@
       const title = document.createElement('h3');
       title.innerHTML = `<a href="${point.url}" target="_blank">${point.name}</a>`;
       container.appendChild(title);
+
+      const typeDisplay = document.createElement('p');
+      typeDisplay.textContent = `Type : ${point.type}`;
+      container.appendChild(typeDisplay);
 
       const notesDisplay = document.createElement('small');
       notesDisplay.textContent = point.notes || '';
