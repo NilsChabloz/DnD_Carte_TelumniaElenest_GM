@@ -11,7 +11,8 @@
       display: flex;
       flex-direction: column;
     }
-    .popup-form input {
+    .popup-form input,
+    .popup-form select {
       margin-bottom: 4px;
     }
     .popup-form button {
@@ -62,7 +63,6 @@
       return icons[type] || icons.default;
     }
 
-    // Charger les points depuis points.json
     fetch('points.json')
       .then(response => response.json())
       .then(data => {
@@ -88,7 +88,6 @@
         });
       });
 
-    // Ajouter un point avec un clic
     map.on('click', function(e) {
       const coords = e.latlng;
 
@@ -101,15 +100,21 @@
       const inputURL = document.createElement('input');
       inputURL.placeholder = 'Lien vers la page Notion';
 
-      const inputType = document.createElement('input');
-      inputType.placeholder = 'Type (ville, ruine, foret, etc.)';
+      const selectType = document.createElement('select');
+      const types = ['ville', 'foret', 'ruine', 'donjon'];
+      types.forEach(t => {
+        const option = document.createElement('option');
+        option.value = t;
+        option.textContent = t.charAt(0).toUpperCase() + t.slice(1);
+        selectType.appendChild(option);
+      });
 
       const buttonAdd = document.createElement('button');
       buttonAdd.textContent = 'Ajouter';
 
       popupContent.appendChild(inputName);
       popupContent.appendChild(inputURL);
-      popupContent.appendChild(inputType);
+      popupContent.appendChild(selectType);
       popupContent.appendChild(buttonAdd);
 
       const popup = L.popup()
@@ -120,7 +125,7 @@
       buttonAdd.addEventListener('click', () => {
         const name = inputName.value.trim();
         const url = inputURL.value.trim();
-        const type = inputType.value.trim().toLowerCase();
+        const type = selectType.value;
 
         if (name && url) {
           const icon = getIconForType(type);
@@ -158,7 +163,6 @@
       });
     });
 
-    // Téléchargement du fichier points.json
     document.getElementById('download-btn').addEventListener('click', () => {
       const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(savedPoints, null, 2));
       const dlAnchor = document.createElement('a');
