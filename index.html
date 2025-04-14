@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Carte interactive D&D</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <style>
+    body, html { margin: 0; padding: 0; }
+    #map { height: 100vh; width: 100vw; }
+  </style>
+</head>
+<body>
+  <div id="map"></div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const imageUrl = 'Telumnia et Elenest.png'; // ton image
+    const imageWidth = 2048; // à ajuster selon ton image
+    const imageHeight = 1182;
+
+    const map = L.map('map', {
+      crs: L.CRS.Simple,
+      minZoom: -2,
+    });
+
+    const bounds = [[0, 0], [imageHeight, imageWidth]];
+    L.imageOverlay(imageUrl, bounds).addTo(map);
+    map.fitBounds(bounds);
+
+    // Exemple de points
+    const points = [
+      { name: "Astarya", pos: [300, 500], url: "https://www.notion.so/astarya" },
+      { name: "Penerya", pos: [700, 1200], url: "https://www.notion.so/penerya" },
+    ];
+
+    points.forEach(({ name, pos, url }) => {
+      L.marker(pos).addTo(map)
+        .bindPopup(`<a href="${url}" target="_blank">${name}</a>`);
+    });
+  </script>
+</body>
+</html>
