@@ -78,5 +78,15 @@
     "url": "Empty",
     "type": "lac",
     "notes": "Lac qui fait trembler Phalanges."
+  },
+  {
+    "name": "Port d'Ormin",
+    "pos": [
+      715.75,
+      462.25
+    ],
+    "url": "https://www.notion.so/Port-d-Ormin-34dc28060165800c9633f342336f33a8?source=copy_link",
+    "type": "ville",
+    "notes": ""
   }
 ]
